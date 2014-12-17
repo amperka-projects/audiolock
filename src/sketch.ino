@@ -1,17 +1,45 @@
+#include <Wire.h>
+#include <Multiservo.h>
+
+
+#define OPEN 112
+#define OPEN2 109
+#define CLOSE 91
+#define CLOSE2 93
 #define CODE_LEN 5
 
-void setup()
-{
-    Serial.begin(9600);
-    pinMode(10, OUTPUT);
-}
 
 bool code[CODE_LEN] = { 1, 0, 0, 1, 1 };
 bool input[CODE_LEN] = { 0, 0, 0, 0, 0 };
 
+Multiservo srv;
+
+
+void setup()
+{
+    Serial.begin(9600);
+    srv.attach(2);
+}
+
+void open(void)
+{
+  srv.write(OPEN);
+  delay(300);
+  srv.write(OPEN2);
+}
+
+void close(void)
+{
+  srv.write(CLOSE);
+  delay(300);
+  srv.write(CLOSE2);
+}
+
 void push(bool b)
 {
     int i;
+    
+    Serial.println(b);
 
     for(i = 0; i < CODE_LEN-1; i++)
         input[i] = input[i+1];
@@ -24,7 +52,10 @@ void push(bool b)
     for(i = 0; i < CODE_LEN; i++)
         input[i] = 0;
 
-    tone(10, 500, 100);
+    open();
+    delay(1000);
+    
+    Serial.println("Started");
 }
 
 void loop()
@@ -55,6 +86,12 @@ void loop()
         shock = false;
 
         push(1);
+    }
+    
+    if(!digitalRead(3))
+    {
+      close();
+      delay(1000);
     }
 }
 
