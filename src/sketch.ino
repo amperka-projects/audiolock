@@ -8,7 +8,7 @@
 #define KNOCK_HIGH 300
 #define KNOCK_TIMEOUT 1000
 
-#define BTN_SHORT_MIN 100
+#define BTN_SHORT_MIN 200
 #define BTN_SHORT_MAX 2000
 #define BTN_LONG_MIN 3000 
 #define BTN_LONG_MAX 10000
@@ -130,6 +130,22 @@ void readPwd(void)
         while((ch = getch_knk()) < 0);
         input[i] = ch;
 
+        if(ch == 0) {
+            ledOn();
+            delay(100);
+            ledOff();
+            delay(100);
+            ledOn();
+            delay(100);
+            ledOff();
+        }
+        else
+        {
+            ledOn();
+            delay(100);
+            ledOff();
+        }
+
         Serial.print((int)ch);
     }
 }
@@ -208,6 +224,16 @@ void loop()
         break;
 
     case SETPWD:
+        delay(2000);
+
+        ledOn();
+        delay(100);
+        ledOff();
+        delay(100);
+        ledOn();
+        delay(100);
+        ledOff();
+
         Serial.print("Input code:");
         readPwd();
 
